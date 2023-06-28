@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Create user</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link" href="/admin/allUsers" >Users table</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="/admin/allUsers/create" >New User</a>
+    </li>
+</ul>
+<form action="#" th:action="@{/admin/create}" th:object="${user}" method="post">
+    <label for="username">User name</label>
+    <input type="text" th:field="*{username}" id="username" placeholder="User name">
+    <br/>
+    <label for="password">Password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="Password">
+    <br/>
+    <label for="email">Email</label>
+    <input type="text" th:field="*{email}" id="email" placeholder="Email">
+    <br/>
+    <label for="roles">Roles</label>
+    <input type="text" th:field="*{roles}" id="roles" placeholder="Roles">
+    <br/>
+    <input type="submit" value="Create User">
+    <br/>
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout">
+    </form>
+
+</form>
+</body>
+</html>

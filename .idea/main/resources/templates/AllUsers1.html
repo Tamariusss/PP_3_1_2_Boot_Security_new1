@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:roles="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All users</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+<div>
+    <nav class="navbar navbar-dark bg-dark">
+
+
+        <!--        не работает!-->
+        <form>
+            <!--            <span sec:authorize="isAuthenticated()"> Logged user: <span sec:authentication="name">-->
+            <!--                <tr th:each="user : ${allUsers}">-->
+            <!--                    <td><span th:text="${user.getUsername()}"></span></td>-->
+            <!--                    <td><span th:text="${user.getRoles()}"></span></td>-->
+            <!--            </span>-->
+            <!--&lt;!&ndash;                Roles: <span sec:authentication="principal.authorities" th:text="${principal.getAuthorities()}"></span>&ndash;&gt;-->
+            <!--            </span>-->
+        </form>
+
+        <form th:action="@{/logout}" method="post">
+            <button type="submit" class="btn btn-link text-light">Logout</button>
+        </form>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-2">
+                <br>
+                <nav class="nav flex-column ">
+                    <a class="nav-link bg-primary text-white" href="/admin/allUsers">Admin</a>
+                    <a class="nav-link" href="/user">User</a>
+                </nav>
+            </div>
+
+            <div class="col-md-10" style="background-color: #f7f8f9;">
+                <br>
+                <h2>Admin panel</h2>
+
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin/allUsers">Users table</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/allUsers/create">New User</a>
+                    </li>
+                </ul>
+
+
+                <nav class="navbar navbar-outline-success bg-light">
+                    <a class="navbar-brand">All users</a>
+                </nav>
+
+
+                <div>
+                    <table class="table table-striped" style="background-color: white">
+
+                        <thead class="table-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Password</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr th:block th:each="user : ${allUsers}">
+                            <td th:text="${user.username}"></td>
+                            <td th:text="${user.password}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.roles}"></td>
+                            <td>
+
+                                <!-- Button trigger modal edit-->
+                                <button id="edit-user" type="button" class="btn btn-info" data-bs-toggle="modal"
+                                        data-bs-target="#userEditDialog" th:data-username="${user.username}"><i
+                                        class="fas fa-edit"></i>
+                                    Edit
+                                </button>
+
+                                <!-- Modal Edit-->
+                                <div class="modal fade" id="userEditDialog" tabindex="-1" role="dialog"
+                                     aria-labelledby="userEditDialogLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="userEditDialogLabel">Edit user</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form>
+                                                    <input type="hidden" id="user-username">
+                                                    <div class="form-group">
+                                                        <label for="user-password"
+                                                               class="col-form-label">Password</label>
+                                                        <input type="text" class="form-control" id="user-password">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="user-email" class="col-form-label">Email</label>
+                                                        <input type="text" class="form-control" id="user-email">
+                                                    </div>
+                                                    <div>
+                                                        <label for="user-roles" class="col-form-label">Roles</label>
+                                                        <input type="text" class="form-control" id="user-roles">
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button id="save-user-button" type="button" class="btn btn-primary">
+                                                    Edit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+
+                            <!-- Button trigger modal Delete-->
+                            <button id="delete-user" type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#userDeleteDialog" th:data-username="${user.username}"><i
+                                    class="fas fa-delete"></i>
+                               Delete
+                            </button>
+
+                            <!-- Modal Delete-->
+                            <div class="modal fade" id="userDeleteDialog" tabindex="-1" role="dialog"
+                                 aria-labelledby="userDeleteDialogLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="userDeleteDialogLabel">Delete user</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close">
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="userForDelete-username"
+                                                           class="col-form-label">Username</label>
+                                                    <input type="text" class="form-control" id="userForDelete-username"
+                                                           readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="userForDelete-password"
+                                                           class="col-form-label">Password</label>
+                                                    <input type="text" class="form-control" id="userForDelete-password"
+                                                           readonly>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="userForDelete-email" class="col-form-label">Email</label>
+                                                    <input type="text" class="form-control" id="userForDelete-email"
+                                                           readonly>
+                                                </div>
+                                                <div>
+                                                    <label for="userForDelete-roles" class="col-form-label">Roles</label>
+                                                    <input type="text" class="form-control" id="userForDelete-roles"
+                                                           readonly>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <button id="delete-user-button" type="button" class="btn btn-danger">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--</div>-->
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT"
+        crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<script>
+    $('#userEditDialog').on('shown.bs.modal', function (event) {
+        let button = $(event.relatedTarget) // Button that triggered the modal
+        let username = button.data('username') // Extract info from data-* attributes
+
+        if (username) {
+            $.get({
+                url: '/api/v1/user/' + username,
+                success: (data) => {
+                    let modal = $(this)
+                    modal.find('#user-username').val(data.username)
+                    modal.find('#user-password').val(data.password)
+                    modal.find('#user-email').val(data.email)
+                    modal.find('#user-roles').val(data.roles)
+                },
+                error: (err) => {
+                    alert(err);
+                }
+            });
+        }
+    })
+
+    $('#save-user-button').click(function () {
+        let modal = $('#userEditDialog')
+        let user = {
+            password: modal.find('#user-password').val(),
+            email: modal.find('#user-email').val(),
+            roles: modal.find('#user-roles').val(),
+        };
+        if (modal.find('#user-username').val()) {
+            user.username = modal.find('#user-username').val()
+        }
+        $.ajax({
+            url: '/api/v1/user',
+            type: 'POST',
+            data: JSON.stringify(user),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                alert(err);
+            }
+        })
+
+        modal.modal('hide');
+    });
+</script>
+
+<!--for Delete-->
+<script>
+    $('#userDeleteDialog').on('shown.bs.modal', function (event) {
+        let button = $(event.relatedTarget) // Button that triggered the modal
+        let username = button.data('username') // Extract info from data-* attributes
+
+        if (username) {
+            $.get({
+                url: '/api/v1/userForDelete/' + username,
+                success: (data) => {
+                    let modal = $(this)
+                    modal.find('#userForDelete-username').val(data.username)
+                    modal.find('#userForDelete-password').val(data.password)
+                    modal.find('#userForDelete-email').val(data.email)
+                    modal.find('#userForDelete-roles').val(data.roles)
+                },
+                error: (err) => {
+                    alert(err);
+                }
+            });
+        }
+    })
+
+    $('#delete-user-button').click(function () {
+
+            let modal = $('#userDeleteDialog')
+            let userForDelete = {
+                password: modal.find('#userForDelete-password').val(),
+                email: modal.find('#userForDelete-email').val(),
+                roles: modal.find('#userForDelete-roles').val(),
+            };
+            if (modal.find('#userForDelete-username').val()) {
+                userForDelete.username = modal.find('#userForDelete-username').val()
+            }
+
+
+        $.ajax({
+            url: '/api/v1/userForDelete',
+            type: 'POST',
+            data: JSON.stringify(userForDelete),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: () => {
+                location.reload()
+            },
+            error: (err) => {
+                alert(err);
+            }
+        })
+
+        modal.modal('hide');
+    });
+</script>
+</body>
+</html>
